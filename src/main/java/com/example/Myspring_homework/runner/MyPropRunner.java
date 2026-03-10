@@ -39,12 +39,10 @@ public class MyPropRunner implements ApplicationRunner {
         logger.info("${myprop.username}  = {}", name);
         logger.info("${myprop.port}  = {}", port);
 
-        System.out.println("----Debug----");
-        logger.debug("MyBootProperties getName() = {}", properties.getUsername());
-        logger.debug("MyBootProperties getPort() = {}", properties.getPort());
-
-        logger.debug("${myprop.username}  = {}", name);
-        logger.debug("${myprop.port}  = {}", port);
+        logger.debug("DEBUG 레벨");
+        logger.debug(">>> ${myprop.userName}  = {}", environment.getProperty("myprop.username"));
+        logger.debug("VM 아규먼트 foo : {}", args.containsOption("foo"));
+        logger.debug("Program 아규먼트 bar : {}", args.containsOption("bar"));
 
     }
 }
