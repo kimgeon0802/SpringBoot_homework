@@ -93,7 +93,7 @@ public class DefaultExceptionAdvice {
         } else if (e instanceof MissingServletRequestParameterException) {
             return HttpStatus.BAD_REQUEST; // 400
         } else if (e instanceof NoResourceFoundException) {
-            return HttpStatus.NOT_FOUND; // 404
+            return HttpStatus.NOT_FOUND; // 405
 //        } else if (e instanceof AccessDeniedException) {
 //            return HttpStatus.FORBIDDEN; // 403
         }
