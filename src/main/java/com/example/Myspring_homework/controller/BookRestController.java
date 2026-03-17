@@ -3,6 +3,7 @@ package com.example.Myspring_homework.controller;
 import com.example.Myspring_homework.entity.Books;
 import com.example.Myspring_homework.exception.BusinessException;
 import com.example.Myspring_homework.repository.BookRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class BookRestController {
 
     //도서 등록 POST
     @PostMapping
-    public Books create(@RequestBody Books bookDetail) {
+    public Books create(@Valid @RequestBody Books bookDetail) {
         return bookRepository.save(bookDetail);
     }
 
@@ -31,27 +32,30 @@ public class BookRestController {
         return bookRepository.findAll();
     }
 
-    //ID로 Book 조회 GET
-    @GetMapping("/{id}")
-    public Books getBookById(@PathVariable Long id) {
-        Optional<Books> OptionalBook = bookRepository.findById(id);
-        Books existBook = getExistBook(OptionalBook);
-        return existBook;
+    //저자로 Book 조회 GET
+    @GetMapping("/{author}")
+    public Books getBookByAuthor(@PathVariable("author") String author) {
+        List<Books> ListBook = bookRepository.findByAuthor(author);
+        Books getListBook = getListBook(ListBook);
+        return getListBook;
     }
 
     //도서번호 조회하고 Book 수정하기 GET PUT
-    @PatchMapping("/{isbn}/")
-    public Books updateBook(@PathVariable String isbn, @RequestBody Books bookDetail) {
+    @PutMapping("/{isbn}/")
+    public Books updateBook(@PathVariable("isbn") String isbn, @Valid @RequestBody Books bookDetail) {
         Books existBook = getExistBook(bookRepository.findByIsbn(isbn));
+        existBook.setAuthor(bookDetail.getAuthor());
+        existBook.setPrice(bookDetail.getPrice());
         existBook.setTitle(bookDetail.getTitle());
+        existBook.setPublishDate(bookDetail.getPublishDate());
         return bookRepository.save(existBook);
     }
 
     //Book 삭제하기 DEL
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
-        Optional<Books> ListBook = bookRepository.findById(id);
-        Books book = getExistBook(ListBook);
+    public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
+        Optional<Books> Optional = bookRepository.findById(id);
+        Books book = getExistBook(Optional);
         bookRepository.delete(book);
         return ResponseEntity.ok("도서ID = " + id + " Book이 삭제 되었습니다.");
     }
@@ -60,6 +64,12 @@ public class BookRestController {
         Books existBook = OptionalBook
                 .orElseThrow(() -> new BusinessException("Book Not Found", HttpStatus.NOT_FOUND));
         return existBook;
+    }
+
+    private static Books getListBook(List<Books> ListBook) {
+        return ListBook.stream()
+                .findFirst()
+                .orElseThrow(() -> new BusinessException("Book Not Found", HttpStatus.NOT_FOUND));
     }
 
 }

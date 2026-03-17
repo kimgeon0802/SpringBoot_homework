@@ -15,5 +15,5 @@ public interface BookRepository extends JpaRepository<Books,Long> {
     List<Books> findByAuthor(String author);
 
     //3. ID(ID, 중복허용함)로 조회하는 finder 메서드 % name %
-    Optional<Books> findById(Long id);
+    //Optional<Books> findById(Long id);
 }

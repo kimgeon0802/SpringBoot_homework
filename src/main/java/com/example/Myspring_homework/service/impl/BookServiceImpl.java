@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
         // List<boos> => Stream<boos>
         return books.stream() //Stream<boos>
                 //.map(boos -> BooksMapper.mapToBookDto(books)) //Stream<bookDto>
-                .map(BookMapper::mapToBookDto)  //Stream<DepartmentDto>
+                .map(BookMapper::mapToBookDto)  //Stream<bookDto>
         // Stream<BookDto> => List<BookDto>
                 .toList();
     }
