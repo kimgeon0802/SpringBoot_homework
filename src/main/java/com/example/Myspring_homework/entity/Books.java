@@ -34,4 +34,14 @@ public class Books {
 
     @Column(nullable = false)
     private Integer price;
+
+    @OneToOne(mappedBy = "books", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private BookDetail bookDetail;
+
+    public void setBookDetail(BookDetail bookDetail) {
+        this.bookDetail = bookDetail;
+        if (bookDetail != null) {
+            bookDetail.setBooks(this);
+        }
+    }
 }

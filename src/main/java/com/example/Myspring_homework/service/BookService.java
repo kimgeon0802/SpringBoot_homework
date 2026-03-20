@@ -5,13 +5,14 @@ import com.example.Myspring_homework.dto.BookDto;
 import java.util.List;
 
 public interface BookService {
-    BookDto BookCreateRequest(BookDto bookDto);
 
-    BookDto getBookById(Long bookId);
+    BookDto.BookResponse BookCreateRequest(BookDto.BookCreateRequest request);
 
-    List<BookDto> getAllBook();
+    BookDto.BookResponse getBookById(Long bookId);
 
-    BookDto BookUpdateRequest(Long bookId, BookDto BookUpdateRequest);
+    List<BookDto.BookResponse> getAllBook();
+
+    BookDto.BookResponse BookUpdateRequest(Long bookId, BookDto.BookUpdateRequest request);
 
     void BookResponse(Long bookId);
 }
