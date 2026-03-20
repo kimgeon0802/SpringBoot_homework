@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -77,11 +78,13 @@ public class DefaultExceptionAdvice {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorObject> handleException(RuntimeException e) {
         ErrorObject errorObject = new ErrorObject();
-        // 예외 타입에 따라 적절한 status code 동적 결정
+
         HttpStatus status = resolveHttpStatus(e);
         errorObject.setStatusCode(status.value());
         errorObject.setMessage(e.getMessage());
+
         log.error(e.getMessage(), e);
+
         return new ResponseEntity<>(errorObject, status);
     }
 
@@ -94,8 +97,8 @@ public class DefaultExceptionAdvice {
             return HttpStatus.BAD_REQUEST; // 400
         } else if (e instanceof NoResourceFoundException) {
             return HttpStatus.NOT_FOUND; // 405
-//        } else if (e instanceof AccessDeniedException) {
-//            return HttpStatus.FORBIDDEN; // 403
+        } else if (e instanceof AccessDeniedException) {
+            return HttpStatus.FORBIDDEN; // 403
         }
         return HttpStatus.INTERNAL_SERVER_ERROR; // 500 (기본값) }
     }

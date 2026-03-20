@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -17,31 +18,24 @@ import java.util.List;
 public class CorsConfig {
 
     @Bean
-    public FilterRegistrationBean<?> corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // 명시적인 도메인만 허용
-        //configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:80","http://localhost"));
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        // Credentials은 필요한 경우에만
-        configuration.setAllowCredentials(false);
-        // 필요한 헤더만 허용
-        configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
-        // 필요한 HTT 메소드만 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // 특정 경로에만 적용 (예: "/api/**")
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
 
-        FilterRegistrationBean<?> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
+        return source;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // ⭐ 핵심
+                .cors(cors -> {})
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/api/**").permitAll()
                         .anyRequest().authenticated()
