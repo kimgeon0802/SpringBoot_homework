@@ -1,15 +1,17 @@
 package com.example.Myspring_homework.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "bookdetail")
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +19,7 @@ public class BookDetail {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", unique = true, nullable = false)
+    @JsonBackReference
     private Books books;
 
     private String description;   // 설명

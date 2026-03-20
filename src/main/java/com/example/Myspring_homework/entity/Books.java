@@ -1,5 +1,7 @@
 package com.example.Myspring_homework.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,6 +38,7 @@ public class Books {
     private Integer price;
 
     @OneToOne(mappedBy = "books", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private BookDetail bookDetail;
 
     public void setBookDetail(BookDetail bookDetail) {

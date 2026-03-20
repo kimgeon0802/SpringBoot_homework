@@ -1,6 +1,7 @@
 package com.example.Myspring_homework.repository;
 
 import com.example.Myspring_homework.entity.BookDetail;
+import com.example.Myspring_homework.entity.Books;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface BookDetailRepository extends JpaRepository<BookDetail, Long> {
 
-    Optional<BookDetail> findByBooksId(Long id);
+    Optional<BookDetail> findByBooksId(Long bookId);
 
     @Query("SELECT bd FROM BookDetail bd JOIN FETCH bd.books WHERE bd.id = :id")
     Optional<BookDetail> findByIdWithBook(Long id);

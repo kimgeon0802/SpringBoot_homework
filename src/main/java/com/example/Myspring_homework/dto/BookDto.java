@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 public class BookDto {
 
+    // 생성 시 필요한 DTO
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -17,69 +18,27 @@ public class BookDto {
         private Long id;
 
         @NotBlank(message = "Book title is required")
-        private String bookTitle;
+        private String title;
 
         @NotBlank(message = "Author name is required")
-        private String bookAuthor;
+        private String author;
 
         @NotBlank(message = "ISBN is required")
         @Pattern(regexp = "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$",
                 message = "ISBN must be valid (10 or 13 digits, with or without hyphens)")
-        private String bookIsbn;
+        private String isbn;
 
         @PositiveOrZero(message = "Price must be positive or zero")
-        private Integer bookPrice;
-
-        @Past(message = "Publish date must be in the past")
-        private LocalDate bookPublishDate;
-
-        @Valid
-        private BookDetailDTO detailRequest;
-
-        //BookCreateRequest => Entity
-        public Books toEntity() {
-            Books book = new Books();
-            book.setTitle(this.bookTitle);
-            book.setAuthor(this.bookAuthor);
-            book.setIsbn(this.bookIsbn);
-            book.setPrice(this.bookPrice);
-            book.setPublishDate(this.bookPublishDate);
-            return book;
-        }
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class BookUpdateRequest {
-        @Positive(message = "가격은 양수여야 합니다.")
         private Integer price;
 
-        // 확장 가능성을 위해 추가 필드들을 옵셔널하게 포함할 수 있음
-        @NotBlank(message = "제목은 필수 입력 항목입니다.")
-        private String title;
-
-        @NotBlank(message = "저자는 필수 입력 항목입니다.")
-        private String author;
-
-        //@NotBlank(message = "출판일자는 필수 입력 항목입니다.")
+        @Past(message = "Publish date must be in the past")
         private LocalDate publishDate;
+
+        @Valid
+        private BookDetailDTO detailRequest;  // 상세 정보 추가
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class BookDetailDTO {
-        private String description;
-        private String language;
-        private Integer pageCount;
-        private String publisher;
-        private String coverImageUrl;
-        private String edition;
-    }
-
+    // 응답 시 필요한 DTO
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -91,41 +50,81 @@ public class BookDto {
         private String isbn;
         private Integer price;
         private LocalDate publishDate;
-        private BookDetailResponse detail;
-
-        public static BookResponse fromEntity(Books book) {
-            BookDetailResponse detailResponse = book.getBookDetail() != null
-                    ? BookDetailResponse.builder()
-                    .id(book.getBookDetail().getId())
-                    .description(book.getBookDetail().getDescription())
-                    .language(book.getBookDetail().getLanguage_())
-                    .pageCount(book.getBookDetail().getPageCount())
-                    .publisher(book.getBookDetail().getPublisher())
-                    .coverImageUrl(book.getBookDetail().getCoverImageUrl())
-                    .edition(book.getBookDetail().getEdition())
-                    .build()
-                    : null;
-
-            return BookResponse.builder()
-                    .id(book.getId())
-                    .title(book.getTitle())
-                    .author(book.getAuthor())
-                    .isbn(book.getIsbn())
-                    .price(book.getPrice())
-                    .publishDate(book.getPublishDate())
-                    .detail(detailResponse)
-                    .build();
-        }
+        private BookDetailResponse detail;  // 상세 응답 포함
     }
 
+    // 도서 수정 시 요청하는 DTO
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BookUpdateRequest {
+        @Positive(message = "Price must be positive")
+        private Integer price;
+
+        @NotBlank(message = "Title is required")
+        private String title;
+
+        @NotBlank(message = "Author is required")
+        private String author;
+
+        private LocalDate publishDate;  // 수정 시 변경될 수 있는 필드
+    }
+
+    // 부분 수정 요청에 필요한 DTO
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BookPatchRequest {
+        @Positive(message = "Price must be positive")
+        private Integer price;
+
+        @NotBlank(message = "Title is required")
+        private String title;
+
+        @NotBlank(message = "Author is required")
+        private String author;
+
+        private LocalDate publishDate;  // 수정할 필드만
+    }
+
+    // 도서 상세 수정 요청에 필요한 DTO
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BookDetailPatchRequest {
+        private String description;  // String 타입
+        private String language_;    // String 타입
+        private int pageCount;       // int 타입
+        private String publisher;    // String 타입
+        private String coverImageUrl; // String 타입
+        private String edition;      // String 타입
+    }
+
+    // 도서 상세 정보 전송을 위한 DTO (등록 시 사용)
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BookDetailDTO {
+        private String description;
+        private String language_;
+        private Integer pageCount;
+        private String publisher;
+        private String coverImageUrl;
+        private String edition;
+    }
+
+    // 도서 상세 응답 DTO
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     public static class BookDetailResponse {
-        private Long id;
         private String description;
-        private String language;
+        private String language_;
         private Integer pageCount;
         private String publisher;
         private String coverImageUrl;
