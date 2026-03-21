@@ -17,9 +17,11 @@ public interface BookService {
 
     List<BookDto.BookDetailResponse> getByPublisher(String Publisher);
 
-    BookDto.BookResponse getBookByIsbn(String bookIsbn);
+    BookDto.BookResponse getBookByIsbn(String isbn);
 
-    List<BookDto.BookResponse> getBookByAuthor(String bookauthor);
+    List<BookDto.BookResponse> getBookByTitle(String title);
+
+    List<BookDto.BookResponse> getBookByAuthor(String author);
 
     List<BookDto.BookResponse> getAllBook();
 

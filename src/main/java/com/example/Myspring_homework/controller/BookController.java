@@ -47,7 +47,7 @@ public class BookController {
 
     @GetMapping("/api/books/search/title?title={title}")
     public ResponseEntity<List<BookDto.BookResponse>> getBookByTitle(@PathVariable String title) {
-        List<BookDto.BookResponse> books = bookService.getBookByAuthor(title);
+        List<BookDto.BookResponse> books = bookService.getBookByTitle(title);
         return ResponseEntity.ok(books);
     }
 

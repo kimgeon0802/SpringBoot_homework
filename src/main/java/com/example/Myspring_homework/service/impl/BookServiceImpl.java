@@ -68,8 +68,17 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<BookDto.BookResponse> getBookByAuthor(String author) {
-        // Publisher로 책 조회 (BookDetailRepository에서)
         List<Books> books = bookRepository.findByAuthor(author);
+
+        return books.stream()
+                .map(BookMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<BookDto.BookResponse> getBookByTitle(String title) {
+        List<Books> books = bookRepository.findByTitle(title);
 
         return books.stream()
                 .map(BookMapper::toResponse)

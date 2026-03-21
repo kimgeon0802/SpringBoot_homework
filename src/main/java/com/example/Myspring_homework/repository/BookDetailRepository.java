@@ -4,6 +4,7 @@ import com.example.Myspring_homework.entity.BookDetail;
 import com.example.Myspring_homework.entity.Books;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,8 +15,8 @@ public interface BookDetailRepository extends JpaRepository<BookDetail, Long> {
 
     Optional<BookDetail> findByBooksId(Long bookId);
 
-    @Query("SELECT bd FROM BookDetail bd JOIN FETCH bd.books WHERE bd.id = :id")
-    Optional<BookDetail> findByIdWithBook(Long id);
+    @Query("SELECT b FROM Books b LEFT JOIN FETCH b.bookDetail WHERE b.id = :id")
+    Optional<BookDetail> findByIdWithBook(@Param("id") Long id);
 
     List<BookDetail> findByPublisher(String publisher);
 }

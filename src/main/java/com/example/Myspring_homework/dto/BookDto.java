@@ -1,6 +1,7 @@
 package com.example.Myspring_homework.dto;
 
 import com.example.Myspring_homework.entity.Books;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -43,6 +44,7 @@ public class BookDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class BookResponse {
         private Long id;
         private String title;
