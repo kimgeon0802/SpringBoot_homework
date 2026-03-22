@@ -154,7 +154,6 @@ public class BookRepositoryTest {
         // When
         List<Books> martinBooks = bookRepository.findByAuthorContainingIgnoreCase("martin");
 
-        // Then
         assertThat(martinBooks).hasSize(2);
         assertThat(martinBooks).extracting(Books::getTitle)
                 .containsExactlyInAnyOrder("Clean Code", "Clean Architecture");
